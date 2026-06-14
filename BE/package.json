@@ -1,0 +1,34 @@
+{
+  "name": "awareness-journal-atlas-backend",
+  "version": "1.0.0",
+  "description": "MongoDB Atlas + Express + Mongoose backend for Awareness Journal App",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js",
+    "db:indexes": "node src/scripts/createIndexes.js",
+    "db:seed": "node src/scripts/seed.js",
+    "check": "node --check src/server.js && node --check src/app.js && node --check src/config/db.js && node --check src/models/User.js && node --check src/models/DailyEntry.js && node --check src/models/RealityCheck.js && node --check src/models/Verification.js && node --check src/models/AwarenessTrace.js && node --check src/models/Theme.js && node --check src/controllers/auth.controller.js && node --check src/controllers/daily.controller.js && node --check src/controllers/awareness.controller.js && node --check src/routes/auth.routes.js && node --check src/routes/daily.routes.js && node --check src/routes/awareness.routes.js && node --check src/scripts/createIndexes.js && node --check src/scripts/seed.js"
+  },
+  "keywords": [
+    "mongodb-atlas",
+    "mongoose",
+    "express",
+    "journal",
+    "awareness"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.4.3",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
