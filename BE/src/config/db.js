@@ -13,14 +13,19 @@ const connectDB = async () => {
       throw new Error("Missing MONGODB_URI in .env file");
     }
 
+    if (mongoose.connection.readyState === 1) {
+      return mongoose.connection;
+    }
+
     await mongoose.connect(mongoUri, {
-      serverSelectionTimeoutMS: 30000,
+      serverSelectionTimeoutMS: Number(process.env.MONGO_SERVER_SELECTION_TIMEOUT_MS) || 10000,
     });
 
     console.log("✅ MongoDB Atlas connected");
+    return mongoose.connection;
   } catch (error) {
     console.error("❌ MongoDB connection failed:", error.message);
-    process.exit(1);
+    throw error;
   }
 };
 
