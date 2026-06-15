@@ -7,6 +7,7 @@ const app = require("../src/app");
 const request = (path, options = {}) =>
   new Promise((resolve, reject) => {
     const server = app.listen(0, () => {
+      const body = options.body ? JSON.stringify(options.body) : null;
       const { port } = server.address();
       const req = http.request(
         {
@@ -14,7 +15,10 @@ const request = (path, options = {}) =>
           port,
           path,
           method: options.method || "GET",
-          headers: options.headers || {},
+          headers: {
+            ...(body ? { "content-type": "application/json", "content-length": Buffer.byteLength(body) } : {}),
+            ...(options.headers || {}),
+          },
         },
         (res) => {
           let body = "";
@@ -32,7 +36,7 @@ const request = (path, options = {}) =>
       req.on("error", (error) => {
         server.close(() => reject(error));
       });
-      req.end();
+      req.end(body);
     });
   });
 
@@ -55,4 +59,19 @@ test("GET /health allows the GitHub Pages frontend origin", async () => {
 
   assert.equal(response.statusCode, 200);
   assert.equal(response.headers["access-control-allow-origin"], "https://dinhloan.github.io");
+});
+
+test("API routes fail fast when the database is not connected", async () => {
+  const response = await request("/api/auth/login", {
+    method: "POST",
+    body: {
+      email: "demo@truenote.local",
+      password: "Password123",
+    },
+  });
+
+  assert.equal(response.statusCode, 503);
+  assert.deepEqual(JSON.parse(response.body), {
+    message: "Database is not connected. Please retry shortly.",
+  });
 });

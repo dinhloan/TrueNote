@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const authRoutes = require("./routes/auth.routes");
 const dailyRoutes = require("./routes/daily.routes");
 const awarenessRoutes = require("./routes/awareness.routes");
+const requireDatabase = require("./middleware/requireDatabase");
 
 const app = express();
 
@@ -42,6 +43,7 @@ app.get("/health", (req, res) => {
   res.json({ ok: true, service: "awareness-journal-api" });
 });
 
+app.use("/api", requireDatabase);
 app.use("/api/auth", authRoutes);
 app.use("/api/daily", dailyRoutes);
 app.use("/api", awarenessRoutes);
